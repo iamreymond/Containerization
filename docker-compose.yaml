@@ -1,0 +1,51 @@
+version: '3.8'
+services:
+  db01:
+    build:
+      context: ./Dockerfiles/db
+    image: emonskieee/vprodb
+    container_name: vprodb
+    ports:
+      - "3306:3306"
+    volumes:
+      - vprodbdata:/var/lib/mysql
+    environment:
+      - MYSQL_ADMIN_PASSWORD=admin123
+    
+  mc01:
+    image: memcached
+    ports:
+      - "1121:1121"
+  
+  rmq01:
+    image: rabbitmq
+    ports:
+      - "5672:5672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=test
+      - RABBITMQ_DEFAULT_PASS=test
+  
+  app01:
+    build:
+      context: ./Dockerfiles/app
+    image: emonskieee/vproapp
+    container_name: vproapp
+    ports:
+      - "8080:8080"
+    volumes:
+      - vproappdata:/usr/local/tomcat/webapps
+  
+  web01:
+    build:
+      context: ./Dockerfiles/web
+    image: emonskieee/vproweb
+    container_name: vproweb
+    ports:
+      - "80:80"
+
+volumes:
+   vprodbdata: {}
+   vproappdata: {}
+
+
+  
